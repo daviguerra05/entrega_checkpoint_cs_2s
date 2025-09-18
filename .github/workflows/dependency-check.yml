@@ -26,6 +26,10 @@ jobs:
       - name: Restore .NET packages
         run: dotnet restore checkpoint/checkpoint.csproj
 
+        # 4️⃣ Definir NVD API Key
+      - name: Set NVD API Key
+        run: echo "NVD_API_KEY=${{ secrets.NVD_API_KEY }}" >> $GITHUB_ENV
+
       # 4️⃣ Baixar Dependency-Check CLI
       - name: Download Dependency-Check CLI
         run: |
