@@ -1,0 +1,43 @@
+name: SCA - OWASP Dependency-Check
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  dependency-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1️⃣ Fazer checkout do repositório
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # 2️⃣ Instalar Java (Dependency-Check precisa)
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      # 3️⃣ Restaurar pacotes .NET
+      - name: Restore .NET packages
+        run: dotnet restore checkpoint/checkpoint.csproj
+
+      # 4️⃣ Rodar OWASP Dependency-Check
+      - name: Run Dependency-Check
+        uses: jeremylong/DependencyCheck@v8.0
+        with:
+          project: 'Checkpoint'
+          scan: 'checkpoint'
+          format: 'HTML'
+          out: 'dependency-check-report'
+
+      # 5️⃣ Upload do relatório como artefato
+      - name: Upload report
+        uses: actions/upload-artifact@v4
+        with:
+          name: dependency-check-report
+          path: dependency-check-report/dependency-check-report.html
