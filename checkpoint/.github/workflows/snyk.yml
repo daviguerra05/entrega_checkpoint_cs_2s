@@ -1,0 +1,41 @@
+name: SCA with Snyk
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  security:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v3
+
+      - name: Configurar .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '8.0.x' # ou a versão do seu projeto
+
+      - name: Restaurar dependências
+        run: dotnet restore
+
+      - name: Instalar Snyk
+        run: npm install -g snyk
+
+      - name: Autenticar Snyk
+        run: snyk auth ${{ secrets.SNYK_TOKEN }}
+
+      - name: Executar SCA (análise de vulnerabilidades)
+        run: snyk test --file=seuprojeto.csproj --severity-threshold=medium
+
+      - name: Gerar relatório em HTML
+        run: snyk test --file=seuprojeto.csproj --json | snyk-to-html -o report.html
+
+      - name: Upload do relatório como artefato
+        uses: actions/upload-artifact@v3
+        with:
+          name: sca-report
+          path: report.html
