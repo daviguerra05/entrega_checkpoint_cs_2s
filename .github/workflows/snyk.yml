@@ -32,12 +32,12 @@ jobs:
         run: |
           cd checkpoint
           ls -l
-          snyk test --file=checkpoint.csproj --severity-threshold=medium
+          snyk test --file=checkpointSolution.sln --severity-threshold=medium
 
       - name: Gerar relatório em HTML
         run: |
           cd checkpoint
-          snyk test --file=checkpoint.csproj --json | snyk-to-html -o report.html
+          snyk test --file=checkpointSolution.sln --json | snyk-to-html -o report.html
 
       - name: Upload do relatório como artefato
         uses: actions/upload-artifact@v4
