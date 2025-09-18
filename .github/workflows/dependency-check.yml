@@ -28,7 +28,7 @@ jobs:
 
       # 4️⃣ Rodar OWASP Dependency-Check
       - name: Run Dependency-Check
-        uses: jeremylong/DependencyCheck@main
+        uses: jeremylong/DependencyCheck@v7.3.2
         with:
           project: 'Checkpoint'
           scan: 'checkpoint'
