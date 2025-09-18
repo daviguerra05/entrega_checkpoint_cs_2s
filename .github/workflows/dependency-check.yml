@@ -1,41 +1,47 @@
-name: SCA - OWASP Dependency-Check
+name: SCA - Dependency-Check CLI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
 jobs:
   dependency-check:
     runs-on: ubuntu-latest
 
     steps:
-      # 1️⃣ Fazer checkout do repositório
+      # 1️⃣ Checkout do código
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # 2️⃣ Instalar Java (Dependency-Check precisa)
+      # 2️⃣ Instalar Java
       - name: Setup Java
         uses: actions/setup-java@v3
         with:
-          distribution: 'temurin'
-          java-version: '17'
+          distribution: temurin
+          java-version: 17
 
       # 3️⃣ Restaurar pacotes .NET
       - name: Restore .NET packages
         run: dotnet restore checkpoint/checkpoint.csproj
 
-      # 4️⃣ Rodar OWASP Dependency-Check
-      - name: Run Dependency-Check
-        uses: jeremylong/DependencyCheck@v7.3.2
-        with:
-          project: 'Checkpoint'
-          scan: 'checkpoint'
-          format: 'HTML'
-          out: 'dependency-check-report'
+      # 4️⃣ Baixar Dependency-Check CLI
+      - name: Download Dependency-Check CLI
+        run: |
+          wget https://github.com/jeremylong/DependencyCheck/releases/download/v7.4.1/dependency-check-7.4.1-release.zip
+          unzip dependency-check-7.4.1-release.zip -d dependency-check-cli
 
-      # 5️⃣ Upload do relatório como artefato
+      # 5️⃣ Rodar análise
+      - name: Run Dependency-Check
+        run: |
+          ./dependency-check-cli/dependency-check/bin/dependency-check.sh \
+            --project "Checkpoint" \
+            --scan checkpoint \
+            --format HTML \
+            --out dependency-check-report
+
+      # 6️⃣ Upload do relatório
       - name: Upload report
         uses: actions/upload-artifact@v4
         with:
