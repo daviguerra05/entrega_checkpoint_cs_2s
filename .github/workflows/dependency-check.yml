@@ -36,14 +36,15 @@ jobs:
           wget https://github.com/jeremylong/DependencyCheck/releases/download/v7.4.1/dependency-check-7.4.1-release.zip
           unzip dependency-check-7.4.1-release.zip -d dependency-check-cli
 
-      # 5️⃣ Rodar análise
+      # 6️⃣ Rodar análise
       - name: Run Dependency-Check
         run: |
           ./dependency-check-cli/dependency-check/bin/dependency-check.sh \
             --project "Checkpoint" \
             --scan checkpoint \
             --format HTML \
-            --out dependency-check-report
+            --out dependency-check-report \
+            --nvdApiKey $NVD_API_KEY
 
       # 6️⃣ Upload do relatório
       - name: Upload report
