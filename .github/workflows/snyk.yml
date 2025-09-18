@@ -31,6 +31,7 @@ jobs:
       - name: Executar SCA (análise de vulnerabilidades)
         run: |
           cd checkpoint
+          ls -l
           snyk test --file=checkpoint.csproj --severity-threshold=medium
 
       - name: Gerar relatório em HTML
