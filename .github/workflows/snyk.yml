@@ -29,10 +29,10 @@ jobs:
         run: snyk auth ${{ secrets.SNYK_TOKEN }}
 
       - name: Executar SCA (análise de vulnerabilidades)
-        run: snyk test --file=seuprojeto.csproj --severity-threshold=medium
+        run: snyk test --file=checkpoint/checkpoint.csproj --severity-threshold=medium
 
       - name: Gerar relatório em HTML
-        run: snyk test --file=seuprojeto.csproj --json | snyk-to-html -o report.html
+        run: snyk test --file=checkpoint/checkpoint.csproj --json | snyk-to-html -o report.html
 
       - name: Upload do relatório como artefato
         uses: actions/upload-artifact@v4
