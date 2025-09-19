@@ -22,7 +22,9 @@ jobs:
 
       # 3. Rodar análise
       - name: Run Semgrep scan
-        run: semgrep --config "p/csharp" --config "auto" --error --json --output report.json
+        run: |
+            semgrep --config "p/csharp" --config "auto" --error --json --output report.json
+            semgrep --config "p/csharp" --config "auto" --sarif --output semgrep.sarif
 
       # 4. Upload do relatório
       - name: Upload scan results
@@ -30,3 +32,9 @@ jobs:
         with:
           name: semgrep-report
           path: report.json
+        
+    # 5. Upload do relatório SARIF para Security tab
+      - name: Upload SARIF report
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: semgrep.sarif
