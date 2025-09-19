@@ -23,6 +23,9 @@ jobs:
 
       - name: Autenticar Snyk
         run: snyk auth ${{ secrets.SNYK_TOKEN }}
+      
+      - name: Instalar snyk-to-sarif
+        run: npm install -g snyk-to-sarif
 
       - name: Executar SCA
         run: | 
